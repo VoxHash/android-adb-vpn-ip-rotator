@@ -1,59 +1,64 @@
 # Getting Started
 
-Complete guide to setting up and using Windscribe IP Changer for Android.
+Complete setup guide for Android ADB VPN IP Rotator.
 
 ## Overview
 
-Windscribe IP Changer for Android is a Python script that automates IP address changes on Android devices by connecting to different Windscribe VPN servers via ADB.
+Android ADB VPN IP Rotator is a Python CLI that uses ADB to automate VPN location changes on Android devices, rotating the device’s public IP. The current supported app target is Windscribe (`com.windscribe.vpn`).
 
 ## Setup Process
 
-### 1. Install Dependencies
+### 1. Install dependencies
 
-See [Installation](installation.md) for platform-specific steps.
+See [Installation](installation.md).
 
 ### 2. Enable Developer Options
 
-On your Android device:
-1. Go to Settings → About Phone
-2. Tap "Build Number" 7 times
-3. Go back to Settings → Developer Options
-4. Enable "USB Debugging"
+On the Android device:
 
-### 3. Connect Device
+1. Settings → About phone  
+2. Tap **Build number** seven times  
+3. Settings → Developer options  
+4. Enable **USB debugging**
 
-**Physical Device:**
-- Connect via USB cable
-- Accept debugging prompt on device
+### 3. Connect the device
+
+**Physical device**
+
+- Connect USB (or use `adb connect HOST:PORT` for wireless debugging)
+- Accept the debugging authorization prompt
+- Verify: `adb devices` shows `device` (not `unauthorized` / `offline`)
+
+**Emulator**
+
+- Start the emulator; ADB usually detects it automatically
 - Verify: `adb devices`
 
-**Emulator:**
-- Start your emulator
-- ADB should automatically detect it
-- Verify: `adb devices`
+### 4. Install and sign in to Windscribe
 
-### 4. Install Windscribe
-
-Install Windscribe app on your Android device and log in.
-
-### 5. Test Connection
+Install the Windscribe Android app and complete login on the device.
 
 ```bash
+adb shell pm list packages | grep -i windscribe
+# expect: package:com.windscribe.vpn
+```
+
+### 5. Smoke-test
+
+```bash
+python3 windscribe_ip_changer.py --list-devices
 python3 test_connection.py
 ```
 
 ## Basic Usage
 
 ```bash
-# Change IP once
 python3 windscribe_ip_changer.py
-
-# Automatic rotation
 python3 windscribe_ip_changer.py --rotate --count 10 --interval 300
 ```
 
 ## Next Steps
 
-- [Usage Guide](usage.md) - Detailed usage instructions
-- [Examples](examples/example-01.md) - Real-world examples
-- [Configuration](configuration.md) - Customize settings
+- [Usage Guide](usage.md)
+- [Examples](examples/example-01.md)
+- [Configuration](configuration.md)

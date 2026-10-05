@@ -1,78 +1,64 @@
 # Troubleshooting
 
-Common issues and solutions.
+Common issues for Android ADB VPN IP Rotator.
 
-## ADB Connection Issues
+## No devices listed by the script
 
-### Problem: No Android device connected via ADB
+**Symptom:** `adb devices` shows a `device`, but `--list-devices` printed nothing (fixed in v0.2.0).
 
-**Solutions:**
-1. Check ADB is installed: `adb version`
-2. Check device connection: `adb devices`
-3. For physical devices:
-   - Enable USB debugging
-   - Enable developer mode
-   - Connect via USB
-   - Accept debugging prompt on device
-4. For emulators:
-   - Start your emulator
-   - Ensure ADB can see it: `adb devices`
-5. Restart ADB server:
-   ```bash
-   adb kill-server
-   adb start-server
-   ```
+**Still empty?**
 
-## Windscribe Not Found
+1. Confirm status is `device`, not `offline` / `unauthorized`  
+2. `adb kill-server && adb start-server`  
+3. Disconnect stale wireless targets: `adb disconnect`  
+4. Re-plug USB and re-accept the RSA prompt  
 
-### Problem: Windscribe not found on device
+## ADB: no devices/emulators found
 
-**Solutions:**
-1. **For CLI:** Install Windscribe CLI from https://windscribe.com
-2. **For Android app:** Install Windscribe app from Google Play Store
-3. Verify installation:
-   - CLI: `adb shell which windscribe`
-   - App: `adb shell pm list packages | grep windscribe`
-4. Ensure Windscribe is configured and logged in
+1. Install platform-tools / `android-tools`  
+2. Enable USB debugging  
+3. Accept the authorization dialog  
+4. For wireless debugging, use a current `adb connect` pair  
 
-## Connection Timeouts
+## Windscribe not found on device
 
-### Problem: Connection timeouts or failures
+```bash
+adb shell pm list packages | grep -i windscribe
+```
 
-**Solutions:**
-1. Increase wait time: `--wait 10` or higher
-2. Check network connection on device
-3. Verify Windscribe account is active
-4. Try different server locations
-5. Check VPN permissions on device
+Install from Play (`com.windscribe.vpn`), open the app once, and sign in.
 
-## Permission Denied
+## Many offline entries in `adb devices`
 
-### Problem: Permission errors when running ADB commands
+Harmless for listing if at least one `device` remains. Clear them with:
 
-**Solutions:**
-1. Ensure ADB has proper permissions
-2. On Linux, add user to `plugdev` group:
-   ```bash
-   sudo usermod -a $USER plugdev
-   ```
-3. Restart ADB server:
-   ```bash
-   adb kill-server
-   adb start-server
-   ```
+```bash
+adb disconnect
+```
 
-## IP Detection Issues
+## Connection timeouts / UI miss
 
-### Problem: Cannot detect IP address
+1. Increase `--wait` (e.g. `10`)  
+2. Unlock the device screen  
+3. Ensure the VPN app UI language/layout matches expected English labels  
+4. Retry after manually opening the app once  
 
-**Solutions:**
-1. Check network interface: `adb shell ip addr show`
-2. Verify VPN connection is active
-3. Try using public IP service: `adb shell curl -s https://api.ipify.org`
+## IP detection fails
 
-## Still Having Issues?
+Some devices lack `curl`/`wget` in the shell. The script uses multiple fallbacks; if all fail, verify VPN status in the app UI and check host-side connectivity through the device network.
 
-- Check [FAQ](faq.md)
-- Open an issue on GitHub
-- Contact support: contact@voxhash.dev
+## Externally managed Python environment
+
+On Arch and similar PEP 668 systems:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+## Still stuck?
+
+- [FAQ](faq.md)
+- GitHub issues on [android-adb-vpn-ip-rotator](https://github.com/VoxHash/android-adb-vpn-ip-rotator)
+- contact@voxhash.dev

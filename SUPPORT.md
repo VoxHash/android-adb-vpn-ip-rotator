@@ -2,14 +2,14 @@
 
 ## Getting Help
 
-- **Documentation**: Check [README.md](README.md) and [docs/](docs/) for guides
-- **Issues**: Open an issue using the appropriate template on GitHub
-- **FAQ**: See [docs/faq.md](docs/faq.md) for common questions
-- **Contact**: contact@voxhash.dev
+- **Documentation**: [README.md](README.md) and [docs/](docs/)
+- **Issues**: Open a GitHub issue with the matching template
+- **FAQ**: [docs/faq.md](docs/faq.md)
+- **Contact**: contact@voxhash.dev (VoxHash Technologies)
 
 ## Before Reporting
 
-1. Check existing issues and documentation
-2. Verify ADB is properly installed and configured
-3. Ensure Windscribe is installed on your Android device/emulator
-4. Include relevant error messages and system information
+1. Confirm ADB sees an authorized device: `adb devices`
+2. Confirm the Windscribe Android app is installed: `adb shell pm list packages | grep -i windscribe`
+3. Run `python3 windscribe_ip_changer.py --list-devices`
+4. Include OS, Python version, ADB version, device model, and the exact command/output

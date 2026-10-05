@@ -1,28 +1,29 @@
 # Quick Start
 
-Get Windscribe IP Changer for Android running in 5 minutes.
+Get Android ADB VPN IP Rotator running in about five minutes.
 
 ## Prerequisites
 
-1. Python 3.x installed
-2. ADB installed and in PATH
-3. Android device/emulator connected
-4. Windscribe installed on device
+1. Python 3.8+  
+2. ADB installed and on `PATH`  
+3. Android device or emulator connected and authorized  
+4. Windscribe Android app installed and logged in  
 
 ## Steps
 
 ```bash
-# 1. Clone repository
-git clone https://github.com/VoxHash/windscribe-ip-changer-android.git
-cd windscribe-ip-changer-android
+git clone https://github.com/VoxHash/android-adb-vpn-ip-rotator.git
+cd android-adb-vpn-ip-rotator
 
-# 2. Verify ADB connection
+python3 -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+
 adb devices
-
-# 3. Run script
+python3 windscribe_ip_changer.py --list-devices
 python3 windscribe_ip_changer.py
 ```
 
-That's it! The script will automatically connect to a random Windscribe server and change your IP.
+The script selects a server location, drives the app UI over ADB, and reports the new IP when detection succeeds.
 
-For more details, see [Installation](installation.md) and [Usage](usage.md).
+More detail: [Installation](installation.md) and [Usage](usage.md).

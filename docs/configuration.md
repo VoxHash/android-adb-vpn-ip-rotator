@@ -1,62 +1,64 @@
 # Configuration
 
-How to configure Windscribe IP Changer for Android.
+Configuration for Android ADB VPN IP Rotator.
 
-## Server Configuration
+## Environment variables
 
-Create a custom server list by copying the example:
+None required. There are no API keys or cloud secrets for the core workflow.
+
+Optional future support may add env vars; today everything is CLI + JSON files.
+
+## Server list
 
 ```bash
 cp servers.json.example servers.json
 ```
 
-Edit `servers.json`:
+Example shape:
 
 ```json
 [
-  {
-    "name": "US East",
-    "location": "us-east"
-  },
-  {
-    "name": "EU West",
-    "location": "eu-west"
-  }
+  { "name": "US East", "location": "us-east" },
+  { "name": "EU West", "location": "eu-west" }
 ]
 ```
-
-Use it:
 
 ```bash
 python3 windscribe_ip_changer.py --servers servers.json
 ```
 
-## Available Locations
+`servers.json` is gitignored; keep the `.example` committed.
 
-Common Windscribe server locations:
-
-- `us-east`, `us-west` (United States)
-- `eu-central`, `eu-west` (Europe)
-- `ap-southeast`, `jp` (Asia Pacific)
-- `sg` (Singapore)
-- And more...
-
-## ADB Path
-
-If ADB is not in PATH, specify it:
+## Multi-device config
 
 ```bash
-python3 windscribe_ip_changer.py --adb-path /custom/path/to/adb
+cp multi_device_config.json.example multi_device_config.json
 ```
 
-Common locations:
+```json
+[
+  { "device_id": "emulator-5554", "location": "us-east" },
+  { "device_id": "emulator-5556", "location": "eu-west" }
+]
+```
+
+## Common location codes
+
+- `us-east`, `us-west`, `us-central`
+- `eu-central`, `eu-west`, `eu-east`
+- `uk`, `uk-london`, `ca`, `jp`, `sg`, `au`, and others mapped in `LOCATION_NAME_MAP`
+
+## ADB path
+
+```bash
+python3 windscribe_ip_changer.py --adb-path /usr/bin/adb
+```
+
+Typical locations:
+
 - Linux: `/usr/bin/adb`
 - macOS: `/usr/local/bin/adb` or `~/Android/Sdk/platform-tools/adb`
-- Windows: `C:\Users\YourName\AppData\Local\Android\Sdk\platform-tools\adb.exe`
-
-## Environment Variables
-
-Currently, configuration is done via command-line arguments. Future versions may support environment variables.
+- Windows: `%LOCALAPPDATA%\Android\Sdk\platform-tools\adb.exe`
 
 ## See Also
 

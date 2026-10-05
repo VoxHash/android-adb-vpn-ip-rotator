@@ -1,88 +1,40 @@
 # Architecture
 
-How Windscribe IP Changer for Android works.
+How Android ADB VPN IP Rotator works.
 
 ## Overview
 
-The script uses ADB (Android Debug Bridge) to communicate with Android devices and control Windscribe VPN connections.
+The host runs a Python CLI that shells out to ADB. On the device, the tool drives the Windscribe Android UI (and optional CLI) to change VPN locations, which changes the device’s egress IP.
 
 ## Components
 
-### 1. ADB Connection Management
+1. **ADB connection management** — locate `adb`, select device, validate state  
+2. **VPN app detection** — package scan / CLI presence  
+3. **UI automation** — `input tap`, `input text`, `input swipe`, optional `uiautomator` dump  
+4. **IP verification** — read network state / public IP helpers  
+5. **Multi-device orchestration** — sequential per-device connect with independent locations  
 
-- Auto-detects ADB executable
-- Validates device connection
-- Handles connection errors
-
-### 2. Windscribe Detection
-
-- Checks for Windscribe CLI (if available)
-- Checks for Windscribe Android app
-- Detects package name for app-based operations
-
-### 3. IP Management
-
-- Gets current IP address
-- Connects to Windscribe servers
-- Disconnects from current server
-- Verifies new IP address
-
-### 4. Server Selection
-
-- Random server selection from available list
-- Supports custom server configurations
-- Fallback to default servers
-
-## Flow Diagram
+## Flow
 
 ```
-┌─────────────┐
-│   Script    │
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│     ADB     │
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│   Android    │
-│   Device     │
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│  Windscribe  │
-│   (VPN)      │
-└─────────────┘
+CLI ──► ADB ──► Android device ──► Windscribe app UI ──► VPN server ──► new egress IP
 ```
 
-## Process Flow
+## Process
 
-1. **Initialization**
-   - Find ADB executable
-   - Check device connection
+1. Resolve ADB path and device ID  
+2. Confirm VPN app installed  
+3. Capture current IP / status  
+4. Disconnect if needed  
+5. Open app, search/select location, connect  
+6. Wait (`--wait`) and verify  
 
-2. **Detection**
-   - Detect Windscribe installation
-   - Get current IP and status
+## Error handling
 
-3. **Connection**
-   - Disconnect from current server (if connected)
-   - Connect to random server
-   - Wait for connection to stabilize
-
-4. **Verification**
-   - Get new IP address
-   - Verify connection status
-
-## Error Handling
-
-- ADB connection failures
-- Windscribe not found
-- Connection timeouts
-- Invalid server locations
+- Missing ADB or unauthorized/offline devices  
+- VPN app not installed (clear message; exit path returns `False`)  
+- UI layout drift (coordinate fallbacks; hierarchy helpers)  
+- Invalid JSON for servers / multi-device configs  
 
 ## See Also
 

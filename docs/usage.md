@@ -1,81 +1,69 @@
 # Usage Guide
 
-How to use Windscribe IP Changer for Android.
+How to use Android ADB VPN IP Rotator.
 
-## Basic Usage
-
-### Single IP Change
-
-Change IP to a random Windscribe server:
+## Single IP change
 
 ```bash
 python3 windscribe_ip_changer.py
 ```
 
-### Automatic IP Rotation
-
-Rotate IPs automatically:
+## Automatic IP rotation
 
 ```bash
 python3 windscribe_ip_changer.py --rotate --count 10 --interval 300
 ```
 
-## Command-Line Options
+## Target a specific device
+
+```bash
+python3 windscribe_ip_changer.py --list-devices
+python3 windscribe_ip_changer.py --device emulator-5554
+```
+
+## Multi-device
+
+```bash
+cp multi_device_config.json.example multi_device_config.json
+# edit device_id / location pairs
+python3 windscribe_ip_changer.py --multi-device multi_device_config.json
+```
+
+## Command-line options
 
 | Option | Description | Default |
 |--------|-------------|---------|
 | `--adb-path` | Path to ADB executable | Auto-detected |
-| `--servers` | Path to JSON file with server list | Uses defaults |
-| `--wait` | Seconds to wait after connecting | 5 |
-| `--rotate` | Enable automatic IP rotation | False |
-| `--count` | Number of rotations | 5 |
+| `--device` | Device serial/ID | First authorized device |
+| `--list-devices` | List devices and exit | — |
+| `--multi-device` | Multi-device JSON config | — |
+| `--servers` | Server list JSON | Built-in defaults |
+| `--wait` | Seconds after connect | 5 |
+| `--rotate` | Rotation mode | False |
+| `--count` | Rotation count | 5 |
 | `--interval` | Seconds between rotations | 300 |
 
-## Examples
-
-### Custom ADB Path
+## Custom servers
 
 ```bash
-python3 windscribe_ip_changer.py --adb-path /custom/path/to/adb
-```
-
-### Custom Server List
-
-```bash
+cp servers.json.example servers.json
 python3 windscribe_ip_changer.py --servers servers.json
 ```
 
-### Custom Wait Time
-
-```bash
-python3 windscribe_ip_changer.py --wait 10
-```
-
-### Full Example
-
-```bash
-python3 windscribe_ip_changer.py \
-  --servers servers.json \
-  --rotate \
-  --count 20 \
-  --interval 600 \
-  --wait 8
-```
-
-## Using as a Python Module
+## Python module usage
 
 ```python
 from windscribe_ip_changer import WindscribeIPChanger
 
-changer = WindscribeIPChanger()
+changer = WindscribeIPChanger(device_id=None)
 if changer.check_adb_connection():
     changer.change_ip(wait_time=5)
 ```
 
-See [API Documentation](api.md) for more details.
+See [API Documentation](api.md).
 
 ## Next Steps
 
-- [Examples](examples/example-01.md) - Real-world examples
-- [Configuration](configuration.md) - Customize settings
-- [CLI Reference](cli.md) - Complete CLI documentation
+- [Examples](examples/example-01.md)
+- [Configuration](configuration.md)
+- [CLI Reference](cli.md)

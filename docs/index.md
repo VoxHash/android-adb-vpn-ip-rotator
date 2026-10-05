@@ -1,18 +1,20 @@
-# Windscribe IP Changer for Android — Documentation
+# Android ADB VPN IP Rotator — Documentation
 
-Welcome to the documentation for Windscribe IP Changer for Android.
+Welcome to the documentation for Android ADB VPN IP Rotator by VoxHash Technologies.
+
+**Not affiliated with Windscribe Limited.** The current automation target is the Windscribe Android app (`com.windscribe.vpn`).
 
 ## Getting Started
 
-- [Quick Start](quick-start.md) - Get up and running in minutes
-- [Installation](installation.md) - Platform-specific installation steps
-- [Getting Started Guide](getting-started.md) - Comprehensive setup guide
+- [Quick Start](quick-start.md) — get running in minutes
+- [Installation](installation.md) — platform-specific install
+- [Getting Started Guide](getting-started.md) — full setup walkthrough
 
 ## Usage
 
-- [Usage Guide](usage.md) - How to use the script
-- [CLI Reference](cli.md) - Command-line options
-- [Configuration](configuration.md) - Configuration options
+- [Usage Guide](usage.md)
+- [CLI Reference](cli.md)
+- [Configuration](configuration.md)
 
 ## Examples
 
@@ -21,10 +23,10 @@ Welcome to the documentation for Windscribe IP Changer for Android.
 
 ## Reference
 
-- [API Documentation](api.md) - Python API reference
-- [Architecture](architecture.md) - How it works
+- [API Documentation](api.md)
+- [Architecture](architecture.md)
 
-## Troubleshooting
+## Help
 
-- [Troubleshooting](troubleshooting.md) - Common issues and solutions
-- [FAQ](faq.md) - Frequently asked questions
+- [Troubleshooting](troubleshooting.md)
+- [FAQ](faq.md)

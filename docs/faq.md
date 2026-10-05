@@ -1,73 +1,53 @@
 # FAQ
 
-Frequently asked questions.
+## What is Android ADB VPN IP Rotator?
 
-## General
+A Python tool from VoxHash Technologies that uses ADB to automate VPN location changes on Android, rotating the device’s public IP. The current app target is Windscribe.
 
-### What is Windscribe IP Changer for Android?
+## Is this an official Windscribe product?
 
-A Python script that automates IP address changes on Android devices by connecting to different Windscribe VPN servers via ADB.
+No. It is independent and not affiliated with Windscribe Limited. Windscribe is a trademark of its owner.
 
-### Do I need root access?
+## Do I need root?
 
-No, root access is not required. The script uses ADB which works with developer mode enabled.
+No. USB debugging (ADB) is enough.
 
-### Does it work with physical devices?
+## Physical devices and emulators?
 
-Yes, it works with both physical Android devices and emulators.
+Both are supported when ADB reports status `device`.
 
-## Installation
+## Python version?
 
-### What Python version do I need?
+Python 3.8+ recommended (3.x required).
 
-Python 3.x is required. Python 3.7 or higher is recommended.
+## Where do I get ADB?
 
-### Where can I get ADB?
+- Linux: `adb` / `android-tools` packages  
+- macOS: `brew install android-platform-tools`  
+- Windows: Android platform-tools zip  
 
-- Linux: `apt-get install adb`
-- macOS: `brew install android-platform-tools`
-- Windows: Download from [Android Developer site](https://developer.android.com/studio/releases/platform-tools)
+## Env vars or secrets?
 
-### Do I need Windscribe CLI or app?
+None for the core tool. Use CLI flags and optional JSON configs.
 
-Either works. The Android app is recommended as it's easier to install and configure.
-
-## Usage
-
-### How do I change IP once?
+## How do I change IP once?
 
 ```bash
 python3 windscribe_ip_changer.py
 ```
 
-### How do I rotate IPs automatically?
+## How do I rotate automatically?
 
 ```bash
 python3 windscribe_ip_changer.py --rotate --count 10 --interval 300
 ```
 
-### Can I use custom servers?
+## Custom servers?
 
-Yes, create a `servers.json` file and use `--servers servers.json`.
-
-## Troubleshooting
-
-### ADB says "no devices/emulators found"
-
-1. Enable USB debugging on your device
-2. Accept the debugging prompt
-3. Check with `adb devices`
-
-### Windscribe not found
-
-Install Windscribe app from Google Play Store or install Windscribe CLI.
-
-### Connection timeouts
-
-Increase wait time with `--wait 10` or check your network connection.
+Yes — `cp servers.json.example servers.json` then `--servers servers.json`.
 
 ## See Also
 
 - [Troubleshooting](troubleshooting.md)
 - [Usage Guide](usage.md)
-- [Support](SUPPORT.md)
+- [Support](../SUPPORT.md)

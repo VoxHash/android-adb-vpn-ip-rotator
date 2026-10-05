@@ -1,48 +1,44 @@
 # Example 01: Basic IP Change
 
-Simple example of changing IP address once.
+Change the device IP once via ADB automation.
 
 ## Scenario
 
-You want to change your Android device's IP address by connecting to a random Windscribe server.
+Rotate to a random configured VPN location on a single authorized Android device.
 
 ## Steps
 
-1. Ensure your Android device is connected via ADB:
-
 ```bash
 adb devices
+python3 windscribe_ip_changer.py --list-devices
+python3 windscribe_ip_changer.py --device YOUR_DEVICE_ID
 ```
 
-2. Run the script:
+## Expected behavior
 
-```bash
-python3 windscribe_ip_changer.py
+1. Script prints the connected device ID  
+2. Detects package `com.windscribe.vpn` (or variant)  
+3. Disconnects if already connected  
+4. Automates location selection and connect  
+5. Prints a new IP when detection succeeds  
+
+If the VPN app is missing, you will see:
+
+```text
+Error: Windscribe not found on device
 ```
 
-## Expected Output
+Install the app, sign in, and retry.
 
-```
-Connected device: emulator-5554
-Windscribe app detected: com.windscribe.android
-Current IP: 192.168.1.100
-Windscribe status: Not connected
-
-Changing IP to US East...
-Connected to Windscribe: Connected to us-east
-New IP: 203.0.113.42
-```
-
-## Using Python API
+## Python API
 
 ```python
 from windscribe_ip_changer import WindscribeIPChanger
 
 changer = WindscribeIPChanger()
 if changer.check_adb_connection():
-    success = changer.change_ip(wait_time=5)
-    if success:
-        print("IP changed successfully!")
+    ok = changer.change_ip(wait_time=5)
+    print("ok" if ok else "failed")
 ```
 
 ## Next Steps

@@ -1,6 +1,6 @@
 # CLI Reference
 
-Complete command-line interface reference.
+Complete command-line interface for Android ADB VPN IP Rotator.
 
 ## Synopsis
 
@@ -12,15 +12,39 @@ python3 windscribe_ip_changer.py [OPTIONS]
 
 ### `--adb-path PATH`
 
-Specify custom path to ADB executable.
+Custom path to the ADB executable.
 
 ```bash
 python3 windscribe_ip_changer.py --adb-path /usr/local/bin/adb
 ```
 
+### `--device DEVICE_ID`
+
+Target a specific device serial (from `adb devices` / `--list-devices`).
+
+```bash
+python3 windscribe_ip_changer.py --device emulator-5554
+```
+
+### `--list-devices`
+
+Print authorized devices and exit.
+
+```bash
+python3 windscribe_ip_changer.py --list-devices
+```
+
+### `--multi-device FILE`
+
+JSON array of `{ "device_id", "location" }` objects.
+
+```bash
+python3 windscribe_ip_changer.py --multi-device multi_device_config.json
+```
+
 ### `--servers FILE`
 
-Path to JSON file containing server list.
+JSON server list. See `servers.json.example`.
 
 ```bash
 python3 windscribe_ip_changer.py --servers servers.json
@@ -28,53 +52,25 @@ python3 windscribe_ip_changer.py --servers servers.json
 
 ### `--wait SECONDS`
 
-Seconds to wait after connecting to VPN server. Default: 5
-
-```bash
-python3 windscribe_ip_changer.py --wait 10
-```
+Seconds to wait after connecting. Default: `5`.
 
 ### `--rotate`
 
 Enable automatic IP rotation mode.
 
-```bash
-python3 windscribe_ip_changer.py --rotate
-```
-
 ### `--count NUMBER`
 
-Number of IP rotations to perform. Only used with `--rotate`. Default: 5
-
-```bash
-python3 windscribe_ip_changer.py --rotate --count 10
-```
+Number of rotations when `--rotate` is set. Default: `5`.
 
 ### `--interval SECONDS`
 
-Seconds between each IP rotation. Only used with `--rotate`. Default: 300
-
-```bash
-python3 windscribe_ip_changer.py --rotate --interval 600
-```
+Seconds between rotations when `--rotate` is set. Default: `300`.
 
 ## Examples
 
-### Basic Usage
-
 ```bash
 python3 windscribe_ip_changer.py
-```
-
-### Rotation Mode
-
-```bash
 python3 windscribe_ip_changer.py --rotate --count 20 --interval 1800
-```
-
-### Custom Configuration
-
-```bash
 python3 windscribe_ip_changer.py \
   --adb-path ~/Android/Sdk/platform-tools/adb \
   --servers my-servers.json \
@@ -83,8 +79,8 @@ python3 windscribe_ip_changer.py \
 
 ## Exit Codes
 
-- `0` - Success
-- `1` - Error (ADB not found, no device connected, etc.)
+- `0` — success / clean exit (including empty device list for `--list-devices`)
+- `1` — fatal error (ADB missing, invalid multi-device config, etc.)
 
 ## See Also
 

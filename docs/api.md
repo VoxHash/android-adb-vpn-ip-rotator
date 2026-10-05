@@ -1,116 +1,83 @@
 # API Documentation
 
-Python API reference for Windscribe IP Changer for Android.
+Python API for Android ADB VPN IP Rotator.
+
+The module file remains `windscribe_ip_changer.py` for compatibility with the current Windscribe automation target.
 
 ## WindscribeIPChanger
 
-Main class for managing Windscribe VPN connections.
+Main class for ADB-driven VPN IP changes.
 
-### `__init__(adb_path=None)`
-
-Initialize the IP changer.
+### `__init__(adb_path=None, device_id=None)`
 
 **Parameters:**
-- `adb_path` (str, optional): Path to ADB executable. Auto-detected if not specified.
 
-**Example:**
+- `adb_path` (str, optional): ADB executable path  
+- `device_id` (str, optional): Device serial; auto-selects first authorized device if omitted  
+
 ```python
-changer = WindscribeIPChanger()
+changer = WindscribeIPChanger(device_id="emulator-5554")
 ```
+
+### `list_devices() -> List[dict]`
+
+Returns `[{"device_id": "...", "status": "device"}, ...]` for authorized devices/emulators.
 
 ### `check_adb_connection() -> bool`
 
-Check if ADB is connected to a device.
-
-**Returns:** `bool` - True if device is connected
-
-**Example:**
-```python
-if changer.check_adb_connection():
-    print("Device connected")
-```
+True when the selected (or any) device is connected.
 
 ### `get_connected_device() -> Optional[str]`
 
-Get the name/ID of the connected device.
-
-**Returns:** `Optional[str]` - Device ID or None
+Selected or first available device ID.
 
 ### `check_windscribe_installed() -> bool`
 
-Check if Windscribe is installed (CLI or app).
-
-**Returns:** `bool` - True if Windscribe is found
+True if Windscribe CLI or Android package is present.
 
 ### `get_windscribe_package_name() -> Optional[str]`
 
-Get Windscribe Android app package name.
-
-**Returns:** `Optional[str]` - Package name or None
+Android package name when detected (e.g. `com.windscribe.vpn`).
 
 ### `get_windscribe_status() -> Optional[str]`
 
-Get current Windscribe connection status.
-
-**Returns:** `Optional[str]` - Status string or None
+Best-effort connection status string.
 
 ### `disconnect_windscribe() -> bool`
 
-Disconnect from current Windscribe server.
-
-**Returns:** `bool` - True if successful
+Disconnect current VPN session (system + UI fallbacks).
 
 ### `connect_windscribe(location: str) -> bool`
 
-Connect to a Windscribe server at the specified location.
-
-**Parameters:**
-- `location` (str): Server location (e.g., "us-east", "eu-west")
-
-**Returns:** `bool` - True if successful
+Connect to a location code such as `"us-east"`.
 
 ### `get_current_ip() -> Optional[str]`
 
-Get current IP address from the device.
-
-**Returns:** `Optional[str]` - IP address or None
+Best-effort public/local IP discovery from the device.
 
 ### `change_ip(servers=None, wait_time=5) -> bool`
 
-Change IP by connecting to a random Windscribe server.
-
-**Parameters:**
-- `servers` (List[dict], optional): List of server dictionaries
-- `wait_time` (int): Seconds to wait after connecting
-
-**Returns:** `bool` - True if successful
+Pick a server and rotate IP.
 
 ### `rotate_ips(count=5, interval=300, servers=None)`
 
-Automatically rotate IPs at specified intervals.
+Repeated `change_ip` with sleeps between iterations.
 
-**Parameters:**
-- `count` (int): Number of IP changes to perform
-- `interval` (int): Seconds between each change
-- `servers` (List[dict], optional): List of server dictionaries
+## Module helper
 
-## Example Usage
+### `manage_multiple_devices(adb_path, device_configs, servers=None) -> dict`
+
+Connect several devices to configured locations. Each config item needs `device_id` and `location`.
+
+## Example
 
 ```python
 from windscribe_ip_changer import WindscribeIPChanger
 
-# Initialize
 changer = WindscribeIPChanger()
-
-# Check connection
-if changer.check_adb_connection():
-    device = changer.get_connected_device()
-    print(f"Connected to: {device}")
-    
-    # Change IP
+if changer.check_adb_connection() and changer.check_windscribe_installed():
     if changer.change_ip(wait_time=5):
-        new_ip = changer.get_current_ip()
-        print(f"New IP: {new_ip}")
+        print(changer.get_current_ip())
 ```
 
 ## See Also

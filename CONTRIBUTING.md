@@ -1,6 +1,6 @@
-# Contributing to Windscribe IP Changer for Android
+# Contributing to Android ADB VPN IP Rotator
 
-Thanks for helping improve Windscribe IP Changer for Android!
+Thanks for helping improve Android ADB VPN IP Rotator (VoxHash Technologies).
 
 ## Code of Conduct
 
@@ -9,57 +9,52 @@ Please read and follow our [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 ## Development Setup
 
 ```bash
-# Clone
-git clone https://github.com/VoxHash/windscribe-ip-changer-android.git
-cd windscribe-ip-changer-android
+git clone https://github.com/VoxHash/android-adb-vpn-ip-rotator.git
+cd android-adb-vpn-ip-rotator
 
-# Verify Python 3.x is installed
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
 python3 --version
-
-# Verify ADB is installed
 adb version
-
-# Run tests
+python3 windscribe_ip_changer.py --list-devices
 python3 test_connection.py
 ```
 
 ## Project Structure
 
-- `windscribe_ip_changer.py` - Main script
-- `test_connection.py` - Connection test utility
-- `example_usage.py` - Usage examples
-- `servers.json.example` - Server configuration template
-- `docs/` - Documentation
+- `windscribe_ip_changer.py` — main CLI/library (Windscribe automation target)
+- `test_connection.py` — connection smoke test
+- `test_with_device.py` — interactive device tests
+- `example_usage.py` — usage examples
+- `servers.json.example` / `multi_device_config.json.example` — config templates
+- `docs/` — documentation kit
 
 ## Branching & Commit Style
 
 - Branches: `feature/...`, `fix/...`, `docs/...`, `chore/...`
 - Conventional Commits: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`
 
-Examples:
-- `feat: add support for custom ADB paths`
-- `fix: correct device ID extraction`
-- `docs: update installation instructions`
-
 ## Pull Requests
 
 - Link related issues
-- Add tests if applicable
-- Update documentation
+- Update docs and `CHANGELOG.md` when behavior changes
+- Keep diffs focused
 - Follow the PR template
-- Keep diffs focused and reviewable
-- Ensure code follows Python PEP 8 style guidelines
 
 ## Testing
 
-Before submitting a PR:
-
-1. Run `python3 -m py_compile windscribe_ip_changer.py` to check syntax
-2. Test with a connected Android device or emulator
-3. Run `python3 test_connection.py` to verify setup
+1. `python3 -m py_compile windscribe_ip_changer.py`
+2. `python3 windscribe_ip_changer.py --list-devices`
+3. With a device that has the Windscribe app installed: `python3 test_connection.py`
 
 ## Release Process
 
 - Semantic Versioning (MAJOR.MINOR.PATCH)
-- Update [CHANGELOG.md](CHANGELOG.md) with changes
-- Tag releases with version numbers
+- Update [CHANGELOG.md](CHANGELOG.md)
+- Tag releases (`vX.Y.Z`) and publish a GitHub Release
+
+## Contact
+
+contact@voxhash.dev

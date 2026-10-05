@@ -1,124 +1,106 @@
-# Windscribe IP Changer for Android
+# Android ADB VPN IP Rotator
 
-[![License](https://img.shields.io/github/license/VoxHash/windscribe-ip-changer-android)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.x-blue)](https://www.python.org/)
+[![License](https://img.shields.io/github/license/VoxHash/android-adb-vpn-ip-rotator)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.8+-blue)](https://www.python.org/)
+[![Release](https://img.shields.io/github/v/release/VoxHash/android-adb-vpn-ip-rotator)](https://github.com/VoxHash/android-adb-vpn-ip-rotator/releases)
 
-> Python script to automatically change IP addresses on Android devices and emulators by connecting to different Windscribe VPN servers via ADB (Android Debug Bridge).
+> Rotate public IPs on Android devices and emulators via ADB by automating a compatible VPN app (currently Windscribe). Built by VoxHash Technologies.
 
-## ✨ Features
+**Not affiliated with Windscribe Limited.** Windscribe is a trademark of its respective owner. This project is an independent ADB automation tool.
 
-- ✅ Connects to Android devices/emulators via ADB
-- ✅ **Fully automated UI automation** - No GUI interaction required
-- ✅ Automatically changes IP by connecting to random Windscribe servers
-- ✅ Supports both physical devices and Android emulators
-- ✅ **Multi-device support** - Manage multiple devices simultaneously with different connections
-- ✅ Configurable server locations
-- ✅ Automatic IP rotation mode
-- ✅ Current IP and status checking
-- ✅ Works with Windscribe CLI or Android app
-- ✅ Smart screen size detection and adaptive UI interaction
+## Features
 
-## 🧭 Table of Contents
+- Connects to Android devices/emulators via ADB
+- Fully automated UI automation (taps/text input; no manual GUI steps)
+- Rotates IP by connecting to different VPN server locations
+- Supports physical devices and Android emulators
+- Multi-device support with independent locations per device
+- Configurable server list (`servers.json`)
+- Automatic rotation mode (`--rotate`)
+- Current IP and connection status checks
 
-- [Quick Start](#-quick-start)
-- [Installation](#-installation)
-- [Usage](#-usage)
-- [Configuration](#-configuration)
-- [Examples](#-examples)
-- [Architecture](#-architecture)
-- [Roadmap](#-roadmap)
-- [Contributing](#-contributing)
-- [License](#-license)
+## Table of Contents
 
-## 🚀 Quick Start
+- [Quick Start](#quick-start)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Examples](#examples)
+- [Architecture](#architecture)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Quick Start
 
 ```bash
 # 1) Clone repository
-git clone https://github.com/VoxHash/windscribe-ip-changer-android.git
-cd windscribe-ip-changer-android
+git clone https://github.com/VoxHash/android-adb-vpn-ip-rotator.git
+cd android-adb-vpn-ip-rotator
 
-# 2) Verify Python 3.x is installed
-python3 --version
+# 2) Optional: isolated Python env (recommended on Arch/PEP 668 systems)
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 
-# 3) Verify ADB is installed and device is connected
+# 3) Verify ADB and a connected device
 adb devices
 
-# 4) Run script
-python3 windscribe_ip_changer.py
+# 4) Install and log into the Windscribe Android app on the device, then run
+python3 windscribe_ip_changer.py --list-devices
+python3 windscribe_ip_changer.py --device YOUR_DEVICE_ID
 ```
 
-## 💿 Installation
+## Installation
 
 See [docs/installation.md](docs/installation.md) for platform-specific steps.
 
 ### Prerequisites
 
-1. **Python 3.x** installed
-2. **ADB (Android Debug Bridge)** installed and configured
-   - Linux: `apt-get install adb` or your package manager
-   - macOS: `brew install android-platform-tools`
-   - Windows: Download from [Android Developer site](https://developer.android.com/studio/releases/platform-tools)
-3. **Windscribe** installed on Android device/emulator
-   - Android app: Install from Google Play Store or APK
-   - CLI: Install from https://windscribe.com (if available)
+| Dependency | Required | Notes |
+|------------|----------|-------|
+| Python 3.8+ | Yes | Standard library only; optional packages in `requirements.txt` |
+| ADB | Yes | `android-tools` / platform-tools in PATH |
+| Android device or emulator | Yes | USB debugging enabled and authorized |
+| Windscribe Android app | Yes (current target) | Package `com.windscribe.vpn`; logged-in account |
+| Env vars / API secrets | No | Configuration is CLI + JSON files |
 
-## 🛠 Usage
+## Usage
 
-Basic usage here. Advanced usage in [docs/usage.md](docs/usage.md).
-
-### Single IP Change
+### Single IP change
 
 ```bash
 python3 windscribe_ip_changer.py
 ```
 
-### Automatic IP Rotation
+### Automatic IP rotation
 
 ```bash
 python3 windscribe_ip_changer.py --rotate --count 10 --interval 300
 ```
 
-### Custom Server List
+### Custom server list
 
 ```bash
+cp servers.json.example servers.json
 python3 windscribe_ip_changer.py --servers servers.json
 ```
 
-### Single Device with Device ID
-
-```bash
-python3 windscribe_ip_changer.py --device emulator-5554
-```
-
-### List Connected Devices
+### Device selection
 
 ```bash
 python3 windscribe_ip_changer.py --list-devices
+python3 windscribe_ip_changer.py --device emulator-5554
 ```
 
-### Multi-Device Management
-
-Connect multiple devices to different locations simultaneously:
+### Multi-device
 
 ```bash
+cp multi_device_config.json.example multi_device_config.json
 python3 windscribe_ip_changer.py --multi-device multi_device_config.json
 ```
 
-Example `multi_device_config.json`:
-```json
-[
-  {
-    "device_id": "emulator-5554",
-    "location": "us-east"
-  },
-  {
-    "device_id": "emulator-5556",
-    "location": "eu-west"
-  }
-]
-```
-
-### All Options
+### All options
 
 ```bash
 python3 windscribe_ip_changer.py \
@@ -131,15 +113,15 @@ python3 windscribe_ip_changer.py \
   --wait 8
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 | Option | Description | Default |
 |--------|-------------|---------|
 | `--adb-path` | Path to ADB executable | Auto-detected |
-| `--device` | Specific device ID to target | Auto-select first device |
-| `--list-devices` | List all connected devices and exit | - |
-| `--multi-device` | Path to JSON file with multi-device config | - |
-| `--servers` | Path to JSON file with server list | Uses defaults |
+| `--device` | Specific device ID | First authorized device |
+| `--list-devices` | List connected devices and exit | — |
+| `--multi-device` | JSON multi-device config path | — |
+| `--servers` | JSON server list path | Built-in defaults |
 | `--wait` | Seconds to wait after connecting | 5 |
 | `--rotate` | Enable automatic IP rotation | False |
 | `--count` | Number of rotations | 5 |
@@ -147,53 +129,38 @@ python3 windscribe_ip_changer.py \
 
 Full reference: [docs/configuration.md](docs/configuration.md)
 
-## 📚 Examples
+## Examples
 
-- Start here: [docs/examples/example-01.md](docs/examples/example-01.md)
-- More: [docs/examples/](docs/examples/)
+- [Basic IP change](docs/examples/example-01.md)
+- [Automatic rotation](docs/examples/example-02.md)
 
-## 🧩 Architecture
+## Architecture
 
-The script works by:
-1. Connecting to Android device/emulator via ADB
-2. Checking if Windscribe is installed (CLI or app)
-3. Getting current IP and Windscribe status
-4. Disconnecting from current server (if connected) via UI automation
-5. **Automatically navigating Windscribe app UI** to select location
-6. Connecting to a random Windscribe server using ADB input commands
-7. Verifying the new IP address
+1. Connect to the device via ADB  
+2. Detect the Windscribe app/CLI  
+3. Read current IP and VPN status  
+4. Disconnect if needed (UI automation + system VPN helpers)  
+5. Navigate the app UI (tap/text) to select a location and connect  
+6. Verify the new public IP  
 
-**UI Automation:** The script uses ADB shell commands (`input tap`, `input text`, etc.) to fully automate the Windscribe Android app **from inside the app on each device**. It:
-- **Makes taps** at specific screen coordinates to navigate the UI
-- **Sends text input** to search for and select server locations
-- **Changes IP from within the app** on each device independently
-- Adapts to different screen sizes and handles UI variations automatically
-- Requires **no manual GUI interaction** - fully automated
+Details: [docs/architecture.md](docs/architecture.md)
 
-**Multi-Device Support:** Each device can have a different VPN connection simultaneously. The script manages connections **from inside the Windscribe app on each device**, allowing independent IP addresses per device.
+## Roadmap
 
-See [docs/architecture.md](docs/architecture.md) for details.
+See [ROADMAP.md](ROADMAP.md). Changes are tracked in [CHANGELOG.md](CHANGELOG.md).
 
-## 🗺 Roadmap
+## Contributing
 
-Planned milestones live in [ROADMAP.md](ROADMAP.md). For changes, see [CHANGELOG.md](CHANGELOG.md).
+Read [CONTRIBUTING.md](CONTRIBUTING.md) and use the PR template.
 
-## 🤝 Contributing
+## Security
 
-We welcome PRs! Please read [CONTRIBUTING.md](CONTRIBUTING.md) and follow the PR template.
+Report vulnerabilities via [SECURITY.md](SECURITY.md).
 
-## 🔒 Security
+## License
 
-Please report vulnerabilities via [SECURITY.md](SECURITY.md).
+MIT — see [LICENSE](LICENSE). Copyright (c) 2026 VoxHash Technologies.
 
-## 📄 License
+## Support
 
-This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
-
-## 📞 Support
-
-For issues, questions, or contributions, see [SUPPORT.md](SUPPORT.md).
-
----
-
-**Note:** This script requires Windscribe to be installed and configured on your Android device or emulator. It uses ADB shell commands to interact with Windscribe via **fully automated UI automation** - no manual GUI interaction is required. Proper ADB setup is essential.
+See [SUPPORT.md](SUPPORT.md) or email contact@voxhash.dev.

@@ -1,27 +1,33 @@
-# Roadmap — Windscribe IP Changer for Android
+# Roadmap — Android ADB VPN IP Rotator
 
-## Q2 2026
-- ✅ **Enhanced UI automation for Windscribe Android app** (Completed)
-- ✅ **Full automation without GUI requirement** (Completed)
-- ✅ **Taps and text input automation** (Completed - uses `adb shell input tap/text`)
-- ✅ **In-app IP changes** (Completed - changes from inside app on each device)
-- ✅ **Smart screen size detection and adaptive UI interaction** (Completed)
-- ✅ **Multi-device management** (Completed - simultaneous connections with different locations per device)
-- Support for more VPN providers
-- Configuration file validation
-- Better error messages and recovery
-- UI element detection improvements (uiautomator integration)
+Maintained by VoxHash Technologies. Items marked complete ship in v0.2.0+.
 
-## Q3 2026
-- GUI application (optional desktop wrapper)
-- Windows/macOS native support
-- Automated testing suite
-- Performance optimizations
-- Connection reliability improvements
+## Now (v0.2.x)
 
-## Future
-- ✅ **Multi-device management (simultaneous connections)** (Completed)
-- Scheduled IP rotations (cron-like scheduling)
-- Integration with CI/CD pipelines
-- Web dashboard for monitoring
-- Advanced UI element detection (OCR-based fallback)
+- ✅ Full Windscribe Android UI automation (tap/text/swipe)
+- ✅ Smart screen-size detection
+- ✅ Multi-device simultaneous connections
+- ✅ Device list / device select CLI
+- Harden `uiautomator` hierarchy parsing for UI layout changes
+- Clearer errors when the VPN app is missing or unauthorized
+- JSON schema validation for `servers.json` and multi-device configs
+
+## Next (v0.3.x)
+
+- Retry/backoff for flaky ADB and VPN connect races
+- Emulator-based CI smoke tests (no physical device required)
+- Optional structured logging (`--verbose` / `--json-log`)
+- Improve public-IP detection without relying on `curl`/`wget` on-device
+
+## Later
+
+- Additional VPN provider adapters (plugin-style; keep Windscribe as first target)
+- Optional desktop wrapper (thin GUI over the CLI)
+- Scheduled rotation helpers (systemd timer / cron examples in docs)
+- Dockerized ADB host for lab environments
+
+## Non-goals (near term)
+
+- Official affiliation or branding with any VPN vendor
+- Shipping VPN credentials or bypassing VPN account requirements
+- Root-only device control paths
