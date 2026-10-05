@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """
-Windscribe IP Changer for Android via ADB
-This script connects to Android devices/emulators via ADB and changes IPs by
-connecting to different Windscribe VPN servers.
+Android ADB VPN IP Rotator (Windscribe-compatible automation target)
+
+Connects to Android devices/emulators via ADB and rotates public IPs by
+automating VPN server location changes in the Windscribe Android app/CLI.
+
+Not affiliated with Windscribe Limited.
 """
 
 import subprocess
@@ -138,18 +141,18 @@ class WindscribeIPChanger:
                 for line in lines[1:]:  # Skip header
                     if line.strip():
                         parts = line.split()
-                if len(parts) >= 2:
-                    device_id = parts[0]
-                    status = parts[1]
-                    if status.lower() in ["device", "emulator"]:
-                        devices.append({
-                            "device_id": device_id,
-                            "status": status
-                        })
-                    elif status.lower() == "unauthorized":
-                        # Device is connected but not authorized
-                        print(f"⚠ Device {device_id} is connected but unauthorized.")
-                        print("   Please accept the USB debugging prompt on your device.")
+                        if len(parts) >= 2:
+                            device_id = parts[0]
+                            status = parts[1]
+                            if status.lower() in ["device", "emulator"]:
+                                devices.append({
+                                    "device_id": device_id,
+                                    "status": status
+                                })
+                            elif status.lower() == "unauthorized":
+                                # Device is connected but not authorized
+                                print(f"⚠ Device {device_id} is connected but unauthorized.")
+                                print("   Please accept the USB debugging prompt on your device.")
         except Exception as e:
             print(f"Error listing devices: {e}")
         return devices
@@ -805,7 +808,7 @@ def manage_multiple_devices(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Change Windscribe IP on Android via ADB",
+        description="Android ADB VPN IP Rotator — automate Windscribe location changes via ADB",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument(
